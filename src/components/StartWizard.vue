@@ -8,21 +8,21 @@
       <q-card-section class="q-pt-none">
         <q-input
           dense
-          v-model="userName"
+          v-model="name"
           autofocus
-          @keyup.enter="validateEnter('userName')"
+          @keyup.enter="validateEnter('name')"
           placeholder="Enter your name here"
         />
       </q-card-section>
 
       <q-card-actions align="right" class="text-primary">
-        <q-btn flat label="Continue" @click="next" :disable="!userName" />
+        <q-btn flat label="Continue" @click="next" :disable="!name" />
       </q-card-actions>
     </q-card>
 
     <q-card style="min-width: 350px" :hidden="card2Hidden">
       <q-card-section>
-        <div class="text-h6">What would you like to do, {{ userName }}?</div>
+        <div class="text-h6">What would you like to do, {{ name }}?</div>
       </q-card-section>
       <q-card-section>
         <div class="q-gutter-md row justify-center">
@@ -63,6 +63,11 @@
 <script>
 export default {
   name: "StartWizard",
+  computed: {
+    userName() {
+      return `${this.name} (me)`;
+    }
+  },
   data() {
     return {
       card1Hidden: false,
@@ -72,8 +77,8 @@ export default {
       alert: false,
       confirm: false,
       prompt: true,
-      userName: "",
-      roomId: ""
+      roomId: "1234",
+      name: ""
     };
   },
   methods: {
@@ -83,7 +88,7 @@ export default {
         return;
       }
       switch (prop) {
-        case "userName": {
+        case "name": {
           this.next();
           break;
         }
@@ -98,15 +103,20 @@ export default {
     next() {
       this.card1Hidden = true;
       this.card2Hidden = false;
+      this.$parent.$parent.userName = this.userName;
     },
     createRoom() {
       this.prompt = false;
+      this.$parent.$parent.roomId = this.roomId;
     },
     next2() {
       this.card2Hidden = true;
       this.card3Hidden = false;
     },
-    joinRoom() { console.log("EDWIN")}
+    joinRoom() {
+      this.prompt = false;
+      this.$parent.$parent.roomId = this.roomId;
+    }
   }
 };
 </script>

@@ -15,21 +15,18 @@ export default {
   props: {
     name: String,
     self: Boolean,
-    text: Array
+    text: Array,
+    avatar: String
   },
   name: "Message",
   data() {
     return {
       id: null,
-      avatar: null,
       timeAgo: null
     };
   },
   created() {
     this.id = Date.now();
-    this.avatar = `https://api.adorable.io/avatars/${Math.floor(
-      Math.random() * 100
-    )}`;
     this.timeAgo = format(this.id);
 
     setInterval(() => {

@@ -2,16 +2,15 @@
   <q-layout view="hHh lpR fFf">
     <q-header class="text-white">
       <q-toolbar>
-        <q-toolbar-title>
-          <q-icon left name="emoji_people" style="round" size="md">
-            <q-tooltip
-              transition-show="flip-right"
-              transition-hide="flip-left"
-              anchor="bottom right"
-            >Developed with love by Edwin Coronado 😊</q-tooltip>
-          </q-icon>
-        </q-toolbar-title>
-        <q-btn dense flat round icon="menu" @click="right = !right" />
+        <q-icon left name="emoji_people" style="round" size="md">
+          <q-tooltip
+            transition-show="flip-right"
+            transition-hide="flip-left"
+            anchor="bottom right"
+          >Developed with love by Edwin Coronado 😊</q-tooltip>
+        </q-icon>
+        <q-toolbar-title class="text-center" v-show="Boolean(roomId)">Room ID: {{ roomId }}</q-toolbar-title>
+        <q-btn dense flat round icon="menu" @click="right = !right" class="absolute-right q-pr-sm" />
       </q-toolbar>
     </q-header>
 
@@ -23,7 +22,12 @@
         <div style="width: 100%">
           <q-chat-message :label="dateNow" />
           <div v-for="message in messages" :key="message.id">
-            <Message :name="message.name" :self="message.self" :text="message.text" />
+            <Message
+              :name="message.name"
+              :self="message.self"
+              :text="message.text"
+              :avatar="avatar"
+            />
           </div>
         </div>
       </div>
@@ -40,7 +44,7 @@
           bg-color="white"
           placeholder="Enter your message"
           v-model="inputText"
-          @keyup.enter="pushMessage"
+          @keyup.enter="pushMessage(true)"
         />
         <q-btn
           round
@@ -50,7 +54,7 @@
           icon="send"
           color="white"
           class="q-ml-sm bg"
-          @click="pushMessage"
+          @click="pushMessage(true)"
         />
       </q-toolbar>
     </q-footer>
@@ -65,9 +69,14 @@ import StartWizard from "../components/StartWizard.vue";
 export default {
   data() {
     return {
+      avatar: `https://api.adorable.io/avatars/${Math.floor(
+        Math.random() * 100
+      )}`,
       inputText: "",
       right: false,
-      messages: []
+      userName: "",
+      messages: [],
+      roomId: ""
     };
   },
   components: {
@@ -75,12 +84,18 @@ export default {
     StartWizard
   },
   methods: {
-    pushMessage() {
-      this.messages.push({
-        name: "Edwin",
-        self: true,
-        text: [this.inputText]
-      });
+    pushMessage(self) {
+      if (this.messages.length > 0) {
+        let lastMessage = this.messages[this.messages.length - 1];
+        lastMessage.self && lastMessage.text.push(this.inputText);
+      } else {
+        this.messages.push({
+          name: this.userName,
+          self: self,
+          text: [this.inputText],
+          avatar: this.avatar
+        });
+      }
       this.inputText = "";
     }
   },
@@ -89,7 +104,6 @@ export default {
       const now = Date.now();
       return date.formatDate(now, "dddd, MMMM Do");
     }
-  },
-  mounted() {}
+  }
 };
 </script>
