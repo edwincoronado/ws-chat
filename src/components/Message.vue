@@ -14,12 +14,12 @@ import { format } from "timeago.js";
 export default {
   props: {
     name: String,
-    self: Boolean
+    self: Boolean,
+    text: Array
   },
   name: "Message",
   data() {
     return {
-      text: ["Hello world"],
       id: null,
       avatar: null,
       timeAgo: null
