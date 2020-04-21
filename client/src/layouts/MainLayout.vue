@@ -24,7 +24,7 @@
           <div v-for="message in messages" :key="message.id">
             <Message
               :name="message.name"
-              :self="message.self"
+              :self="message.userId == userId"
               :text="message.text"
               :avatar="avatar"
             />
@@ -65,6 +65,10 @@
 import { date } from "quasar";
 import Message from "../components/Message.vue";
 import StartWizard from "../components/StartWizard.vue";
+import { v4 as uuid } from "uuid";
+import io from "socket.io-client";
+
+const socket = io("http://localhost:3001");
 
 export default {
   data() {
@@ -75,6 +79,7 @@ export default {
       inputText: "",
       right: false,
       userName: "",
+      userId: "",
       messages: [],
       roomId: ""
     };
@@ -84,18 +89,18 @@ export default {
     StartWizard
   },
   methods: {
-    pushMessage(self) {
-      if (this.messages.length > 0) {
-        let lastMessage = this.messages[this.messages.length - 1];
-        lastMessage.self && lastMessage.text.push(this.inputText);
-      } else {
-        this.messages.push({
-          name: this.userName,
-          self: self,
-          text: [this.inputText],
-          avatar: this.avatar
-        });
-      }
+    pushMessage() {
+      const message = {
+        name: this.userName,
+        self: null,
+        userId: this.userId,
+        text: [this.inputText],
+        avatar: this.avatar,
+        id: uuid()
+      };
+
+      socket.emit("chatMessage", message);
+
       this.inputText = "";
     }
   },
@@ -104,6 +109,16 @@ export default {
       const now = Date.now();
       return date.formatDate(now, "dddd, MMMM Do");
     }
+  },
+  created() {
+    this.userId = uuid();
+
+    socket.on("message", message => {
+      if (this.messages.length > 0 && message.userId === this.userId) 
+        this.messages[this.messages.length - 1].text.push(message.text);
+      else
+        this.messages.push(message);
+    });
   }
 };
 </script>

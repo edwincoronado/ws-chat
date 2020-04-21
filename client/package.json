@@ -13,7 +13,9 @@
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "quasar": "^1.0.0",
-    "timeago.js": "^4.0.2"
+    "socket.io-client": "^2.3.0",
+    "timeago.js": "^4.0.2",
+    "uuid": "^7.0.3"
   },
   "devDependencies": {
     "@quasar/app": "^1.0.0"

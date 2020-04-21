@@ -1,0 +1,20 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Server code for the ws-chat application",
+  "main": "index.js",
+  "repository": "https://github.com/edwincoronado/ws-chat.git",
+  "author": "Edwin Coronado",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
