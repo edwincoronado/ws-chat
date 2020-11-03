@@ -14,22 +14,19 @@ import { format } from "timeago.js";
 export default {
   props: {
     name: String,
-    self: Boolean
+    self: Boolean,
+    text: Array,
+    avatar: String
   },
   name: "Message",
   data() {
     return {
-      text: ["Hello world"],
       id: null,
-      avatar: null,
       timeAgo: null
     };
   },
   created() {
     this.id = Date.now();
-    this.avatar = `https://api.adorable.io/avatars/${Math.floor(
-      Math.random() * 100
-    )}`;
     this.timeAgo = format(this.id);
 
     setInterval(() => {
